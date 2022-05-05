@@ -26,7 +26,7 @@ Renderer::Renderer()
     SpriteVA.AddBuffer(SpriteVB, SpriteVBL);
 }
 
-void Renderer::DrawSprite(glm::mat4& transform, Texture& texture)
+void Renderer::DrawSprite(glm::mat4& transform, Texture* texture)
 {
     SpriteShader.Bind();
 
@@ -34,7 +34,7 @@ void Renderer::DrawSprite(glm::mat4& transform, Texture& texture)
     SpriteShader.SetUniformMat4f("u_Mvp", transform);
 
     glBindTexture(GL_TEXTURE_2D, 0);
-    texture.Bind();
+    texture->Bind();
 
     SpriteVA.Bind();
     SpriteIB.Bind();

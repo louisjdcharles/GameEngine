@@ -27,7 +27,17 @@ void AssetManager::RenderImGui()
 	for (auto [key, img] : ImageAssets) {
 		ImGui::TableNextColumn();
 
-		ImGui::Image((void*) img->GLTexture->GetId(), ImVec2{90, 90}, ImVec2{0, 1}, ImVec2{1, 0});
+		ImGui::Image((void*)img->GLTexture->GetId(), ImVec2{ 90, 90 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+			ImGui::SetDragDropPayload("ImageAsset", (void*) img, sizeof(void*));
+
+			ImGui::Image((void*)img->GLTexture->GetId(), ImVec2{ 90, 90 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+			ImGui::EndDragDropSource();
+		}
+
+
 		ImGui::Text(key.c_str());
 	}
 
