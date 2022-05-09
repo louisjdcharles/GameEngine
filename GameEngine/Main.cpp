@@ -248,7 +248,7 @@ void Application::RenderImGui() {
     int size_x = (int)size.x;
     int size_y = (int)size.y;
 
-    if ((SceneFB == nullptr || size_x != SceneFB->GetWidth() || size_y != SceneFB->GetHeight()))
+    if ((SceneFB == nullptr || size_x != SceneFB->GetWidth() || size_y != SceneFB->GetHeight()) && size_x > 0 && size_y > 0)
     {
         delete SceneFB;
 

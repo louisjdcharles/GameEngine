@@ -2,6 +2,8 @@
 
 #include "../Assets/ImageAsset.h"
 
+#include <iostream>
+
 class SpriteRendererComponent
 {
 public:
@@ -10,5 +12,10 @@ public:
 	SpriteRendererComponent(ImageAsset* imgAsset);
 
 	void RenderImGui();
+
+	~SpriteRendererComponent()
+	{
+		std::cout << "sprite renderer destroyed\n";
+	}
 };
 

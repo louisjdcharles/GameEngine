@@ -16,32 +16,31 @@ void AssetManager::RenderImGui()
 {
 	ImGui::Begin("Asset Manager");
 
-	ImGui::Text("New and improved asset manager!");
-
 	auto dim = ImGui::GetContentRegionAvail();
 
 	int nColumns = dim.x / 100.f;
 
-	ImGui::BeginTable("Image Asset Table", nColumns);
+	if (ImGui::BeginTable("Image Asset Table", nColumns)) {
 
-	for (auto [key, img] : ImageAssets) {
-		ImGui::TableNextColumn();
-
-		ImGui::Image((void*)img->GLTexture->GetId(), ImVec2{ 90, 90 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-
-		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
-			ImGui::SetDragDropPayload("ImageAsset", (void*) img, sizeof(void*));
+		for (auto& [key, img] : ImageAssets) {
+			ImGui::TableNextColumn();
 
 			ImGui::Image((void*)img->GLTexture->GetId(), ImVec2{ 90, 90 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
-			ImGui::EndDragDropSource();
+			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+				ImGui::SetDragDropPayload("ImageAsset", &img, sizeof(ImageAsset*));
+
+				ImGui::Image((void*)img->GLTexture->GetId(), ImVec2{ 64, 64 }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+				ImGui::EndDragDropSource();
+			}
+
+
+			ImGui::Text(key.c_str());
 		}
 
-
-		ImGui::Text(key.c_str());
+		ImGui::EndTable();
 	}
-
-	ImGui::EndTable();
 
 	ImGui::End();
 }

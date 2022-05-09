@@ -18,11 +18,8 @@ void SpriteRendererComponent::RenderImGui()
 		ImGui::Image((void*)ImgAsset->GLTexture->GetId(), { 64, 64 }, { 0, 1 }, { 1, 0 });
 		if (ImGui::BeginDragDropTarget())
 		{
-			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ImageAsset");
-
-			if (payload != nullptr)
-			{
-				ImgAsset = (ImageAsset*)payload->Data;
+			if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ImageAsset")){
+				ImgAsset = *((ImageAsset**)payload->Data);
 			}
 
 			ImGui::EndDragDropTarget();
