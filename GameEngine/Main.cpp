@@ -1,13 +1,19 @@
+// standard library
 #include <iostream>
 #include <sstream>
 
+// opengl extension loader
 #include <glad/glad.h>
+
+// glfw windowing system
 #include <GLFW/glfw3.h>
 
+// imgui
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+// internal opengl abstractions
 #include "Engine/Renderer/Texture.h"
 #include "Engine/Renderer/FrameBuffer.h"
 #include "Engine/Renderer/IndexBuffer.h"
@@ -16,14 +22,14 @@
 #include "Engine/Renderer/VertexBuffer.h"
 #include "Engine/Renderer/VertexBufferLayout.h"
 
+// Scence-Entity-Component
 #include "Engine/Scene/GameObject.h"
 #include "Engine/Scene/Scene.h"
 #include "Engine/Scene/TransformComponent.h"
 #include "Engine/Scene/SpriteRendererComponent.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include "Engine/Scene/BaseEntityComponent.h"
+
+// engine asset manager
 #include "Engine/Assets/AssetManager.h"
 
 class Application
@@ -264,12 +270,21 @@ void Application::RenderImGui() {
     ImGui::End();
 
     ImGui::Begin("Heirarchy");
-        
-    auto view = myScene.GetRegistry()->view<TransformComponent>();
+    
+    if (ImGui::Button("New")) {
+        myScene.AddObject("New Object");
+    }
 
-    for (auto [entity, transform] : view.each()) {
+    auto view = myScene.GetRegistry()->view<BaseEntityComponent>();
 
-        if (ImGui::RadioButton(myScene.GetRegistry()->get<BaseEntityComponent>(entity).GetName().c_str(), entity == selected)) {
+    for (auto [entity, base] : view.each()) {
+
+        std::stringstream label;
+        label << base.GetName().c_str();
+        label << "##";
+        label << (int) entity;
+
+        if (ImGui::RadioButton(label.str().c_str(), entity == selected)) {
             selected = entity;
         }
     }
@@ -277,11 +292,35 @@ void Application::RenderImGui() {
     ImGui::End();
 
     ImGui::Begin("Properties");
+    
 
-    ImGui::Text(myScene.GetRegistry()->get<BaseEntityComponent>(selected).GetName().c_str());
 
-    myScene.GetRegistry()->get<TransformComponent>(selected).RenderImGui();
-    myScene.GetRegistry()->get<SpriteRendererComponent>(selected).RenderImGui();
+    char nameBuffer[256];
+    strcpy_s(nameBuffer, myScene.GetRegistry()->get<BaseEntityComponent>(selected).GetName().c_str());
+
+    if (ImGui::InputTextWithHint("##EntityNameInput", "name", nameBuffer, 256))
+    {
+        std::string new_name = nameBuffer;
+
+        myScene.GetRegistry()->get<BaseEntityComponent>(selected).SetName(new_name);
+    }
+
+    if (ImGui::BeginCombo("##Add Component Dropdown", "Add Component")) {
+
+        if (ImGui::Selectable("Transform")) {
+            myScene.GetRegistry()->emplace<TransformComponent>(selected);
+        } else if (ImGui::Selectable("Sprite Renderer")) {
+            myScene.GetRegistry()->emplace<SpriteRendererComponent>(selected);
+        }
+
+        ImGui::EndCombo();
+    }
+
+    if (myScene.GetRegistry()->any_of<TransformComponent>(selected))
+        myScene.GetRegistry()->get<TransformComponent>(selected).RenderImGui();
+
+    if (myScene.GetRegistry()->any_of<SpriteRendererComponent>(selected))
+        myScene.GetRegistry()->get<SpriteRendererComponent>(selected).RenderImGui();
 
     ImGui::End();
 

@@ -39,9 +39,14 @@ void Scene::Draw(FrameBuffer* fb, Renderer* renderer)
 	Registry.view<TransformComponent, SpriteRendererComponent>().each([&](TransformComponent& transform, SpriteRendererComponent& spriteRenderer) {
 		glm::mat4 mvp = view * proj * transform.GetModelMatrix();
 
-		Texture* tx = spriteRenderer.ImgAsset->GLTexture;
+		ImageAsset* img = spriteRenderer.ImgAsset;
 
-		renderer->DrawSprite(mvp, tx);
+		if (img != nullptr) {
+
+			Texture* tx = img->GLTexture;
+
+			renderer->DrawSprite(mvp, tx);
+		}
 	});
 
 	fb->UnBind();

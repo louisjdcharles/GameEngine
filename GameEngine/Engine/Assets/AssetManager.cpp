@@ -49,3 +49,4 @@ ImageAsset* AssetManager::GetImage(std::string key)
 {
 	return ImageAssets.at(key);
 }
+

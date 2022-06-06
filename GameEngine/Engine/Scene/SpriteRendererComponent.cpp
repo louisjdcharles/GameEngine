@@ -1,13 +1,31 @@
 #include "SpriteRendererComponent.h"
 
 #include <imgui.h>
+#include <entt/entt.hpp>
+
+ImageAsset* SpriteRendererComponent::GetDefaultImage()
+{
+	if (defaultImgAsset == nullptr) {
+		defaultImgAsset = new ImageAsset("Engine\\Renderer\\default\\default.png");
+
+		return defaultImgAsset;
+	}
+	else {
+		return defaultImgAsset;
+	}
+}
 
 SpriteRendererComponent::SpriteRendererComponent(ImageAsset* imgAsset)
 {
 	ImgAsset = imgAsset;
 }
 
-void SpriteRendererComponent::RenderImGui()
+SpriteRendererComponent::SpriteRendererComponent()
+{
+	ImgAsset = GetDefaultImage();
+}
+
+void SpriteRendererComponent::RenderImGui(entt::entity self, entt::registry& registry);
 {
 	if (ImGui::CollapsingHeader("Sprite Renderer")) {
 
@@ -27,6 +45,14 @@ void SpriteRendererComponent::RenderImGui()
 		
 		ImGui::Text("Dimensions: %dx%d pixels", ImgAsset->GLTexture->GetWidth(), ImgAsset->GLTexture->GetHeight());
 
+		if (ImGui::Button("Remove")) {
+			
+		}
+
 		ImGui::EndGroup();
 	}
+}
+
+SpriteRendererComponent::~SpriteRendererComponent()
+{
 }
