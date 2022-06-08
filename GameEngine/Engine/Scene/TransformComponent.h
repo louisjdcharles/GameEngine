@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <entt/entt.hpp>
+
 class TransformComponent
 {
 private:
@@ -27,6 +29,6 @@ public:
 
 	glm::mat4 GetModelMatrix() const;
 
-	void RenderImGui();
+	void RenderImGui(entt::entity self, entt::registry* registry);
 };
 

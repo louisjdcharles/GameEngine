@@ -84,23 +84,9 @@ int Application::Start() {
 
     assetManager = new AssetManager();
     renderer = new Renderer();
+    selected = entt::null;
 
     InitImGui();
-
-    auto sr = SpriteRendererComponent(assetManager->GetImage("test1"));
-    auto sr2 = SpriteRendererComponent(assetManager->GetImage("test2"));
-
-    GameObject* g = myScene.AddObject("A Game Object");
-
-    g->AddComponent<TransformComponent>();
-    g->AddComponent<SpriteRendererComponent>(sr);
-
-    GameObject* h = myScene.AddObject("Another Game Object");
-
-    h->AddComponent<TransformComponent>();
-    h->AddComponent<SpriteRendererComponent>(sr2);
-
-    selected = g->GetId();
 
     return 0;
 }
@@ -265,17 +251,15 @@ void Application::RenderImGui() {
 
     ImGui::End();
 
-    ImGui::Begin("Viewport");
-        
-    ImGui::End();
-
     ImGui::Begin("Heirarchy");
     
     if (ImGui::Button("New")) {
         myScene.AddObject("New Object");
     }
 
-    auto view = myScene.GetRegistry()->view<BaseEntityComponent>();
+    entt::registry* scene_registry = myScene.GetRegistry();
+
+    auto view = scene_registry->view<BaseEntityComponent>();
 
     for (auto [entity, base] : view.each()) {
 
@@ -294,33 +278,44 @@ void Application::RenderImGui() {
     ImGui::Begin("Properties");
     
 
+    if (selected != entt::null) {
+        char nameBuffer[256];
+        strcpy_s(nameBuffer, scene_registry->get<BaseEntityComponent>(selected).GetName().c_str());
 
-    char nameBuffer[256];
-    strcpy_s(nameBuffer, myScene.GetRegistry()->get<BaseEntityComponent>(selected).GetName().c_str());
+        if (ImGui::InputTextWithHint("##EntityNameInput", "name", nameBuffer, 256))
+        {
+            std::string new_name = nameBuffer;
 
-    if (ImGui::InputTextWithHint("##EntityNameInput", "name", nameBuffer, 256))
-    {
-        std::string new_name = nameBuffer;
-
-        myScene.GetRegistry()->get<BaseEntityComponent>(selected).SetName(new_name);
-    }
-
-    if (ImGui::BeginCombo("##Add Component Dropdown", "Add Component")) {
-
-        if (ImGui::Selectable("Transform")) {
-            myScene.GetRegistry()->emplace<TransformComponent>(selected);
-        } else if (ImGui::Selectable("Sprite Renderer")) {
-            myScene.GetRegistry()->emplace<SpriteRendererComponent>(selected);
+            scene_registry->get<BaseEntityComponent>(selected).SetName(new_name);
         }
 
-        ImGui::EndCombo();
+        if (ImGui::Button("Remove##entity")) {
+            scene_registry->destroy(selected);
+
+            selected = entt::null;
+            goto skip_render;
+        }
+
+        if (ImGui::BeginCombo("##Add Component Dropdown", "Add Component")) {
+
+            if (ImGui::Selectable("Transform") && !scene_registry->any_of<TransformComponent>(selected)) {
+                scene_registry->emplace<TransformComponent>(selected);
+            }
+            else if (ImGui::Selectable("Sprite Renderer") && !scene_registry->any_of<SpriteRendererComponent>(selected)) {
+                scene_registry->emplace<SpriteRendererComponent>(selected);
+            }
+
+            ImGui::EndCombo();
+        }
+
+        if (scene_registry->any_of<TransformComponent>(selected))
+            scene_registry->get<TransformComponent>(selected).RenderImGui(selected, scene_registry);
+
+        if (scene_registry->any_of<SpriteRendererComponent>(selected))
+            scene_registry->get<SpriteRendererComponent>(selected).RenderImGui(selected, scene_registry);
+
     }
-
-    if (myScene.GetRegistry()->any_of<TransformComponent>(selected))
-        myScene.GetRegistry()->get<TransformComponent>(selected).RenderImGui();
-
-    if (myScene.GetRegistry()->any_of<SpriteRendererComponent>(selected))
-        myScene.GetRegistry()->get<SpriteRendererComponent>(selected).RenderImGui();
+    skip_render:
 
     ImGui::End();
 

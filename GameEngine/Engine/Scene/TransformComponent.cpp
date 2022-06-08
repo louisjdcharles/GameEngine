@@ -58,7 +58,7 @@ glm::mat4 TransformComponent::GetModelMatrix() const
 	return model;
 }
 
-void TransformComponent::RenderImGui()
+void TransformComponent::RenderImGui(entt::entity self, entt::registry* registry)
 {
 	ImGui::BeginGroup();
 
@@ -193,6 +193,10 @@ void TransformComponent::RenderImGui()
 		ImGui::EndColumns();
 
 		ImGui::PopStyleVar();
+
+		if (ImGui::Button("Remove")) {
+			registry->remove<TransformComponent>(self);
+		}
 	}
 
 	ImGui::EndGroup();

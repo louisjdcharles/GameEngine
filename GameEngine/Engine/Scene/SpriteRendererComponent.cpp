@@ -1,7 +1,6 @@
 #include "SpriteRendererComponent.h"
 
 #include <imgui.h>
-#include <entt/entt.hpp>
 
 ImageAsset* SpriteRendererComponent::GetDefaultImage()
 {
@@ -25,7 +24,7 @@ SpriteRendererComponent::SpriteRendererComponent()
 	ImgAsset = GetDefaultImage();
 }
 
-void SpriteRendererComponent::RenderImGui(entt::entity self, entt::registry& registry);
+void SpriteRendererComponent::RenderImGui(entt::entity self, entt::registry* registry)
 {
 	if (ImGui::CollapsingHeader("Sprite Renderer")) {
 
@@ -46,7 +45,7 @@ void SpriteRendererComponent::RenderImGui(entt::entity self, entt::registry& reg
 		ImGui::Text("Dimensions: %dx%d pixels", ImgAsset->GLTexture->GetWidth(), ImgAsset->GLTexture->GetHeight());
 
 		if (ImGui::Button("Remove")) {
-			
+			registry->remove<SpriteRendererComponent>(self);
 		}
 
 		ImGui::EndGroup();

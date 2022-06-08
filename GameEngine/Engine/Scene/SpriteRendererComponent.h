@@ -3,6 +3,7 @@
 #include "../Assets/ImageAsset.h"
 
 #include <iostream>
+#include <entt/entt.hpp>
 
 class SpriteRendererComponent
 {
@@ -16,7 +17,7 @@ public:
 	SpriteRendererComponent(ImageAsset* imgAsset);
 	SpriteRendererComponent();
 
-	void RenderImGui();
+	void RenderImGui(entt::entity self, entt::registry* registry);
 
 	~SpriteRendererComponent();
 };
