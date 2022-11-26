@@ -5,17 +5,17 @@
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
 
-	class VertexArray
-	{
-	private:
-		GLuint Id;
-	public:
-		VertexArray();
-		~VertexArray();
+class VertexArray
+{
+private:
+	GLuint Id;
+public:
+	VertexArray();
+	~VertexArray();
 
-		void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
+	void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
 
-		void Bind() const;
-		void UnBind() const;
-	};
+	void Bind() const;
+	void UnBind() const;
+};
 

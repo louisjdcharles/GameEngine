@@ -5,6 +5,8 @@
 #include <iostream>
 #include <entt/entt.hpp>
 
+#include <imgui.h>
+
 class SpriteRendererComponent
 {
 private:
@@ -13,7 +15,8 @@ private:
 
 public:
 	ImageAsset* ImgAsset;
-
+	ImVec4 Albedo = {1.0, 1.0, 1.0, 1.0};
+	
 	SpriteRendererComponent(ImageAsset* imgAsset);
 	SpriteRendererComponent();
 

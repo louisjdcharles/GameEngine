@@ -6,9 +6,14 @@ in vec4 gl_FragCoord;
 in vec2 v_TexCoord;
 
 uniform sampler2D u_Texture;
+uniform vec4 u_Albedo;
+uniform bool u_UsesTexture;
 
 void main()
 {
-    vec4 texColor = texture(u_Texture, v_TexCoord);
-    colour = texColor;
+    if (u_UsesTexture) {
+        colour = texture(u_Texture, v_TexCoord);
+    } else {
+        colour = u_Albedo;
+    }
 }

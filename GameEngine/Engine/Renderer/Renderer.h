@@ -23,6 +23,6 @@ public:
 
 	Renderer();
 
-	void DrawSprite(glm::mat4& transform, Texture* texture);
+	void DrawSprite(glm::mat4& transform, Texture* texture, glm::vec4& colour);
 };
 

@@ -49,7 +49,7 @@ void TransformComponent::Enlarge(glm::vec2 factor)
 
 glm::mat4 TransformComponent::GetModelMatrix() const
 {
-	glm::mat4 model = glm::mat4(1);
+	glm::mat4 model(1);
 
 	model = glm::translate(model, Position);
 	model = glm::rotate(model, Rotation, glm::vec3(0, 0, 1));

@@ -4,27 +4,27 @@
 #include "Texture.h"
 
 
-	class FrameBuffer
-	{
-	private:
-		GLuint Id;
-		Texture* ColorBufferTexture = nullptr;
-		Texture* DepthStencilBufferTexture = nullptr;
-		GLuint RenderBuffer;
+class FrameBuffer
+{
+private:
+	GLuint Id;
+	Texture* ColorBufferTexture = nullptr;
+	Texture* DepthStencilBufferTexture = nullptr;
+	GLuint RenderBuffer;
 
-		int Width;
-		int Height;
-	public:
-		FrameBuffer(int Width, int Height);
+	int Width;
+	int Height;
+public:
+	FrameBuffer(int Width, int Height);
 
-		void Bind() const;
-		void UnBind() const;
+	void Bind() const;
+	void UnBind() const;
 
-		int GetWidth() const;
-		int GetHeight() const;
+	int GetWidth() const;
+	int GetHeight() const;
 
-		GLuint GetColorBufferId() const;
+	GLuint GetColorBufferId() const;
 
-		~FrameBuffer();
-	};
+	~FrameBuffer();
+};
 

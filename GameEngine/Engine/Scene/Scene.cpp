@@ -17,11 +17,17 @@ Scene::~Scene()
 
 void Scene::Start()
 {
+	m_Timer = std::chrono::system_clock::now();
 }
 
-void Scene::Update(float dt)
+void Scene::Update()
 {
-	
+	m_Registry.view<TransformComponent>().each([&](TransformComponent& transform) {
+		transform.Translate(m_DeltaTime * glm::vec3(1, 0, 0));
+	});
+
+	m_DeltaTime = (float)std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - m_Timer).count() / 1'000'000;
+	m_Timer = std::chrono::system_clock::now();
 }
 
 void Scene::Draw(FrameBuffer* fb, Renderer* renderer)
@@ -36,16 +42,19 @@ void Scene::Draw(FrameBuffer* fb, Renderer* renderer)
 	glm::mat4 proj = glm::ortho(-ratio, ratio, -1.0f, 1.0f, -100.0f, 100.0f);
 	glm::mat4 view = glm::scale(glm::identity<glm::mat4>(), glm::vec3(0.2, 0.2, 1));
 
-	Registry.view<TransformComponent, SpriteRendererComponent>().each([&](TransformComponent& transform, SpriteRendererComponent& spriteRenderer) {
+	m_Registry.view<TransformComponent, SpriteRendererComponent>().each([&](TransformComponent& transform, SpriteRendererComponent& spriteRenderer) {
 		glm::mat4 mvp = view * proj * transform.GetModelMatrix();
 
 		ImageAsset* img = spriteRenderer.ImgAsset;
+		glm::vec4 colour = { spriteRenderer.Albedo.x, spriteRenderer.Albedo.y, spriteRenderer.Albedo.z, spriteRenderer.Albedo.w };
 
 		if (img != nullptr) {
 
 			Texture* tx = img->GLTexture;
-
-			renderer->DrawSprite(mvp, tx);
+			renderer->DrawSprite(mvp, tx, colour);
+		}
+		else {
+			renderer->DrawSprite(mvp, nullptr, colour);
 		}
 	});
 
@@ -54,7 +63,5 @@ void Scene::Draw(FrameBuffer* fb, Renderer* renderer)
 
 GameObject* Scene::AddObject(std::string name)
 {
-	GameObject* g = new GameObject(&Registry, name);
-
-	return g;
+	return new GameObject(&m_Registry, name);
 }

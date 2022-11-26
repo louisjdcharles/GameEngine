@@ -2,6 +2,8 @@
 
 #include <entt/entt.hpp>
 
+#include <chrono>
+
 #include "../Renderer/FrameBuffer.h"
 #include "GameObject.h"
 #include "../Renderer/Renderer.h"
@@ -13,14 +15,16 @@ public:
 	~Scene();
 
 	void Start();
-	void Update(float dt);
+	void Update();
 	void Draw(FrameBuffer* fb, Renderer* renderer);
 
 	GameObject* AddObject(std::string name);
 
-	entt::registry* GetRegistry() { return &Registry; }
+	entt::registry* GetRegistry() { return &m_Registry; }
 
 private:
-	entt::registry Registry;
+	entt::registry m_Registry;
+	float m_DeltaTime = 0;
+	std::chrono::time_point<std::chrono::system_clock> m_Timer;
 };
 

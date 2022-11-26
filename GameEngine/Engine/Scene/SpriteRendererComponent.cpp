@@ -1,7 +1,5 @@
 #include "SpriteRendererComponent.h"
 
-#include <imgui.h>
-
 ImageAsset* SpriteRendererComponent::GetDefaultImage()
 {
 	if (defaultImgAsset == nullptr) {
@@ -21,7 +19,7 @@ SpriteRendererComponent::SpriteRendererComponent(ImageAsset* imgAsset)
 
 SpriteRendererComponent::SpriteRendererComponent()
 {
-	ImgAsset = GetDefaultImage();
+	ImgAsset = nullptr;
 }
 
 void SpriteRendererComponent::RenderImGui(entt::entity self, entt::registry* registry)
@@ -32,7 +30,14 @@ void SpriteRendererComponent::RenderImGui(entt::entity self, entt::registry* reg
 
 		ImGui::Text("Sprite Renderer");
 
-		ImGui::Image((void*)ImgAsset->GLTexture->GetId(), { 64, 64 }, { 0, 1 }, { 1, 0 });
+		if (ImgAsset != nullptr) {
+			ImGui::Text("Texture:");
+			ImGui::Text("Dimensions: %dx%d pixels", ImgAsset->GLTexture->GetWidth(), ImgAsset->GLTexture->GetHeight());
+			ImGui::Image((void*)ImgAsset->GLTexture->GetId(), { 64, 64 }, { 0, 1 }, { 1, 0 });
+		}
+		else
+			ImGui::Image((void*) GetDefaultImage()->GLTexture->GetId(), {64, 64}, {0, 1}, {1, 0});
+
 		if (ImGui::BeginDragDropTarget())
 		{
 			if(const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ImageAsset")){
@@ -41,8 +46,9 @@ void SpriteRendererComponent::RenderImGui(entt::entity self, entt::registry* reg
 
 			ImGui::EndDragDropTarget();
 		}
-		
-		ImGui::Text("Dimensions: %dx%d pixels", ImgAsset->GLTexture->GetWidth(), ImgAsset->GLTexture->GetHeight());
+
+		ImGui::ColorEdit4("Colour", (float*)&Albedo, ImGuiColorEditFlags_NoInputs);
+
 
 		if (ImGui::Button("Remove")) {
 			registry->remove<SpriteRendererComponent>(self);

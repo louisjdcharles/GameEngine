@@ -2,20 +2,20 @@
 
 #include <glad/glad.h>
 
-	class IndexBuffer
-	{
-	private:
-		GLuint Id;
-		unsigned int Count;
-	public:
-		IndexBuffer() = default;
-		void BufferData(const unsigned int* data, unsigned int count);
+class IndexBuffer
+{
+private:
+	GLuint Id;
+	unsigned int Count;
+public:
+	IndexBuffer() = default;
+	void BufferData(const unsigned int* data, unsigned int count);
 
-		~IndexBuffer();
+	~IndexBuffer();
 
-		void Bind() const;
-		void UnBind() const;
+	void Bind() const;
+	void UnBind() const;
 
-		unsigned int GetCount() const { return Count; }
-	};
+	unsigned int GetCount() const { return Count; }
+};
 
