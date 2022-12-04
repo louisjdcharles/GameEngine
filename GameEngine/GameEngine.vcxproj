@@ -158,6 +158,7 @@ xcopy "C:\Program Files\Mono\lib\mono\4.5\*" "$(TargetDir)..\lib\mono\4.5\" /y</
     <ClCompile Include="Engine\Renderer\FrameBuffer.cpp" />
     <ClCompile Include="Engine\Scene\GameObject.cpp" />
     <ClCompile Include="Engine\Assets\ImageAsset.cpp" />
+    <ClCompile Include="Engine\Scene\ScriptComponent.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Engine\Renderer\Texture.cpp" />
     <ClCompile Include="Engine\Renderer\Shader.cpp" />
@@ -166,6 +167,8 @@ xcopy "C:\Program Files\Mono\lib\mono\4.5\*" "$(TargetDir)..\lib\mono\4.5\" /y</
     <ClCompile Include="Engine\Scene\TransformComponent.cpp" />
     <ClCompile Include="Engine\Scene\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Renderer\OpenGLWindow.cpp" />
+    <ClCompile Include="Engine\Scene\ScriptingSystem.cpp" />
+    <ClCompile Include="Engine\Scene\ScriptWrapper.cpp" />
     <ClCompile Include="Vendor\glad\glad.c" />
     <ClCompile Include="Vendor\glm\glm\detail\glm.cpp" />
     <ClCompile Include="Vendor\imgui\imgui.cpp" />
@@ -191,10 +194,13 @@ xcopy "C:\Program Files\Mono\lib\mono\4.5\*" "$(TargetDir)..\lib\mono\4.5\" /y</
     <ClInclude Include="Engine\Scene\Scene.h" />
     <ClInclude Include="Engine\Scene\GameObject.h" />
     <ClInclude Include="Engine\Renderer\Renderer.h" />
+    <ClInclude Include="Engine\Scene\ScriptComponent.h" />
     <ClInclude Include="Engine\Scene\TransformComponent.h" />
     <ClInclude Include="Engine\Scene\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Assets\ImageAsset.h" />
     <ClInclude Include="Engine\Renderer\OpenGLWindow.h" />
+    <ClInclude Include="Engine\Scene\ScriptingSystem.h" />
+    <ClInclude Include="Engine\Scene\ScriptWrapper.h" />
     <ClInclude Include="Vendor\entt\entt\config\config.h" />
     <ClInclude Include="Vendor\entt\entt\config\macro.h" />
     <ClInclude Include="Vendor\entt\entt\config\version.h" />

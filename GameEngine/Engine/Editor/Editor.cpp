@@ -5,6 +5,7 @@
 #include "../Scene/SpriteRendererComponent.h"
 #include "../Scene/TransformComponent.h"
 #include "../Scene/BaseEntityComponent.h";
+#include "../Scene/ScriptComponent.h"
 
 void Editor::RenderSceneView()
 {
@@ -31,11 +32,15 @@ void Editor::RenderSceneView()
 void Editor::RenderHeirarchy()
 {
     ImGui::Begin("Heirarchy");
-
-    if (ImGui::Button("Run")) {
-        m_Running = true;
-        m_CurrentScene.Start();
-    }
+    
+        if (ImGui::Button("Stop") && m_Running) {
+            m_Running = false;
+            m_CurrentScene.Stop();
+        }
+        if (ImGui::Button("Run") && !m_Running) {
+            m_Running = true;
+            m_CurrentScene.Start();
+        }
 
     if (ImGui::Button("New")) {
         m_CurrentScene.AddObject("New Object");
@@ -82,6 +87,7 @@ void Editor::RenderProperties()
 
             m_SelectedEntity = entt::null;
         }
+
         else {
             if (ImGui::BeginCombo("##Add Component Dropdown", "Add Component")) {
 
@@ -90,7 +96,9 @@ void Editor::RenderProperties()
                 }
                 else if (ImGui::Selectable("Sprite Renderer") && !scene_registry->any_of<SpriteRendererComponent>(m_SelectedEntity)) {
                     scene_registry->emplace<SpriteRendererComponent>(m_SelectedEntity);
-                }
+                } else if (ImGui::Selectable("Script") && !scene_registry->any_of<ScriptComponent>(m_SelectedEntity)) {
+                    scene_registry->emplace<ScriptComponent>(m_SelectedEntity);
+                } 
 
                 ImGui::EndCombo();
             }
@@ -100,6 +108,9 @@ void Editor::RenderProperties()
 
             if (scene_registry->any_of<SpriteRendererComponent>(m_SelectedEntity))
                 scene_registry->get<SpriteRendererComponent>(m_SelectedEntity).RenderImGui(m_SelectedEntity, scene_registry);
+
+            if (scene_registry->any_of<ScriptComponent>(m_SelectedEntity))
+                scene_registry->get<ScriptComponent>(m_SelectedEntity).RenderImGui(m_SelectedEntity, scene_registry);
         }
 
     }

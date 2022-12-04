@@ -2,9 +2,11 @@
 
 #include "TransformComponent.h"
 #include "SpriteRendererComponent.h"
+#include "BaseEntityComponent.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "ScriptComponent.h"
 
 Scene::Scene()
 {
@@ -17,16 +19,35 @@ Scene::~Scene()
 
 void Scene::Start()
 {
+	m_ScriptingSystem = new ScriptingSystem();
+	m_ScriptingSystem->InitialiseAPI();
+
 	m_Timer = std::chrono::system_clock::now();
+
+	m_Registry.view<ScriptComponent, BaseEntityComponent>().each([&](ScriptComponent& sc, BaseEntityComponent& bec) {
+		sc.InitScript(m_ScriptingSystem->GetDomain(), m_ScriptingSystem->GetImage(), bec.GetOwner());
+	});
+
+	m_Registry.view<ScriptComponent>().each([&](ScriptComponent& sc) {
+		sc.m_Wrapper->CallOnStart();
+	});
+}
+
+void Scene::Stop()
+{
+	delete m_ScriptingSystem;
 }
 
 void Scene::Update()
 {
-	m_Registry.view<TransformComponent>().each([&](TransformComponent& transform) {
-		transform.Translate(m_DeltaTime * glm::vec3(1, 0, 0));
+	m_Registry.view<ScriptComponent>().each([&](ScriptComponent& sc) {
+		sc.m_Wrapper->CallOnUpdate();
 	});
 
 	m_DeltaTime = (float)std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - m_Timer).count() / 1'000'000;
+
+	m_ScriptingSystem->SetDeltaTime(m_DeltaTime);
+
 	m_Timer = std::chrono::system_clock::now();
 }
 

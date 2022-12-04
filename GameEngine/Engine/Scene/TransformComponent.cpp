@@ -201,3 +201,15 @@ void TransformComponent::RenderImGui(entt::entity self, entt::registry* registry
 
 	ImGui::EndGroup();
 }
+
+void TransformComponent::Translate(entt::registry* reg, entt::entity entity, glm::vec3& vec)
+{
+	if (reg->any_of<TransformComponent>(entity))
+		reg->get<TransformComponent>(entity).Translate(vec);
+}
+
+glm::vec3 TransformComponent::GetPosition(entt::registry* reg, entt::entity entity)
+{
+	if (reg->any_of<TransformComponent>(entity))
+		return reg->get<TransformComponent>(entity).GetPosition();
+}

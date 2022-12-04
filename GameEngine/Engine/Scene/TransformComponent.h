@@ -30,5 +30,8 @@ public:
 	glm::mat4 GetModelMatrix() const;
 
 	void RenderImGui(entt::entity self, entt::registry* registry);
+
+	static void Translate(entt::registry* reg, entt::entity entity, glm::vec3& vec);
+	static glm::vec3 GetPosition(entt::registry* reg, entt::entity entity);
 };
 

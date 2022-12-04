@@ -22,28 +22,16 @@
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 
+float deltaTime() {
+    return 0.5f;
+}
+
 int main(void)
 {
     Editor e;
 
     e.Init();
-    /*e.RunLoop();*/
-
-
-    MonoDomain* domain = mono_jit_init("Application");
-    mono_set_dirs(".", ".");
-    MonoAssembly* assembly = mono_domain_assembly_open(domain, "..\\CSTestProject\\bin\\Debug\\CSTestProject.dll");
-    MonoImage* image = mono_assembly_get_image(assembly);
-
-    MonoClass* testclass = mono_class_from_name(image, "CSTestProject", "ExampleClass");
-
-    MonoMethod* method = mono_class_get_method_from_name(testclass, "Function", 0);
-
-    MonoObject* result;
-
-    result = mono_object_new(domain, testclass);
-
-    mono_runtime_invoke(method, result, nullptr, nullptr);
+    e.RunLoop();
 
     return 0;
 }

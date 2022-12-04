@@ -7,6 +7,7 @@
 #include "../Renderer/FrameBuffer.h"
 #include "GameObject.h"
 #include "../Renderer/Renderer.h"
+#include "ScriptingSystem.h"
 
 class Scene
 {
@@ -15,6 +16,7 @@ public:
 	~Scene();
 
 	void Start();
+	void Stop();
 	void Update();
 	void Draw(FrameBuffer* fb, Renderer* renderer);
 
@@ -26,5 +28,6 @@ private:
 	entt::registry m_Registry;
 	float m_DeltaTime = 0;
 	std::chrono::time_point<std::chrono::system_clock> m_Timer;
+	ScriptingSystem* m_ScriptingSystem;
 };
 

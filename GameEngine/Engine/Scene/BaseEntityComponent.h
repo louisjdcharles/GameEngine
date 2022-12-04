@@ -1,9 +1,10 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "GameObject.h"
-
+#include "ScriptWrapper.h"
 class BaseEntityComponent {
 private:
 	std::string Name;
@@ -21,6 +22,8 @@ public:
 	void SetName(std::string& name) {
 		Name = name;
 	}
+
+	GameObject* GetOwner() { return Owner; }
 
 	void Destroy() {
 		Owner->GetRegistry()->destroy(Owner->GetId());
